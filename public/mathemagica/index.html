@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Mathemagica</title>
+</head>
+<body>
+    <button onclick="newCalc()">New Operation</button>
+    <h1 id="operation"></h1>
+    <button onclick="sendOperation(this)" id="result1"></button>
+    <button onclick="sendOperation(this)" id="result2"></button>
+    <button onclick="sendOperation(this)" id="result3"></button>
+    <script>
+        function newCalc() {
+            fetch("http://localhost:3000/mathemagica/new").then(resp => resp.json()).then(json => {
+                document.getElementById("operation").innerHTML = json.math;
+                document.getElementById("result1").innerHTML = json.result1;
+                document.getElementById("result2").innerHTML = json.result2;
+                document.getElementById("result3").innerHTML = json.result3;
+            })
+        }
+
+        function sendOperation(elem) {
+            var math = document.getElementById("operation").innerHTML;
+            fetch("http://localhost:3000/mathemagica/result", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    math: math,
+                    result: elem.innerHTML
+                })
+            }).then(resp => resp.json()).then(json => {
+                alert(json.result);
+                document.getElementById("operation").innerHTML = '';
+                document.getElementById("result1").innerHTML = '';
+                document.getElementById("result2").innerHTML = '';
+                document.getElementById("result3").innerHTML = '';
+            });
+        }
+    </script>
+</body>
+</html>

@@ -9,10 +9,8 @@ router.use(function timeLog(req, res, next) {
   next();
 });
 
-// define the home page route
-router.get('/', function(req, res) {
-    res.send('Mathemagica works');
-});
+router.use('/', express.static(__dirname + '/public/mathemagica'));
+router.use(express.json());
 
 // define the about route
 router.get('/about', function(req, res) {
@@ -38,6 +36,19 @@ router.get('/new', function(req, res) {
         "result2": eval(operation2).toString(),
         "result3": eval(operation3).toString()
     });
+});
+
+router.post('/result', function(req, res){
+    console.log(req.body);
+    if (eval(req.body.math) == req.body.result) {
+        res.send({
+            result: "Correto! :)"
+        });
+    } else {
+        res.send({
+            result: "Errado :("
+        });
+    }
 });
 
 module.exports = router;
